@@ -1,5 +1,6 @@
 #pragma once
 #include <opennn/opennn.h>
+#include <chrono>
 
 using namespace OpenNN;
 
@@ -17,11 +18,11 @@ public:
 	ImageRecognition();
 
 	ImageRecognition& CreateNeuralNetwork(int32_t input, int32_t hidden, int32_t output, const std::string& data);
-	ImageRecognition& LoadNeuralNetworkFromFile(std::string path);
-	ImageRecognition& SaveNeuralNetworkToFile(std::string path);
+	ImageRecognition& LoadNeuralNetworkState(std::string dir);
+	ImageRecognition& SaveNeuralNetworkState(std::string dir);
 	ImageRecognition& SetData(std::string path);
 	ImageRecognition& RandomizeSamples();
-	bool Train();
+	int64_t Train();
 	int32_t CheckExample(std::string path);
 
 };

@@ -1,6 +1,7 @@
 #include "ImageRecognition.h"
 #include <string>
 #include <FreeImage.h>
+#include <boost/filesystem.hpp>
 
 ImageRecognition::ImageRecognition()
 {
@@ -33,15 +34,19 @@ ImageRecognition & ImageRecognition::CreateNeuralNetwork(int32_t input, int32_t 
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::LoadNeuralNetworkFromFile(std::string path)
+ImageRecognition & ImageRecognition::LoadNeuralNetworkState(std::string dir)
 {
-	m_NeuralNetwork.load(path);
+	m_NeuralNetwork.load(dir + "ns.xml");
+	m_TrainingStrategy.load(dir + "ts.xml");
+	m_LossIndex.load(dir + "li.xml");
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::SaveNeuralNetworkToFile(std::string path)
+ImageRecognition & ImageRecognition::SaveNeuralNetworkState(std::string dir)
 {
-	m_NeuralNetwork.save(path);
+	m_NeuralNetwork.save(dir + "ns.xml");
+	m_TrainingStrategy.save(dir + "ts.xml");
+	m_LossIndex.save(dir + "li.xml");
 	return *this;
 }
 
@@ -59,13 +64,18 @@ ImageRecognition & ImageRecognition::RandomizeSamples()
 	return *this;
 }
 
-bool ImageRecognition::Train()
+int64_t ImageRecognition::Train()
 {
 	m_LossIndex.set_neural_network_pointer(&m_NeuralNetwork);
 	m_LossIndex.set_data_set_pointer(&m_Data);
 	m_TrainingStrategy.set_loss_index_pointer(&m_LossIndex);
+
+	auto start = std::chrono::system_clock().now();
 	m_TrainingStrategy.perform_training();
-	return true;
+	auto end = std::chrono::system_clock().now();
+	int64_t m_TimeSEC = std::chrono::duration_cast<std::chrono::seconds>((end - start)).count();
+	
+	return m_TimeSEC;
 }
 
 int32_t ImageRecognition::CheckExample(std::string path)

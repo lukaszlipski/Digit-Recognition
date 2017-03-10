@@ -3,19 +3,26 @@
 
 int main()
 {
-	DataGenerator dGen;
-	dGen.GenerateData("img/","data/data.dat");
+	//DataGenerator dGen;
+	//dGen.GenerateData("img/","data/data.dat");
 
-	ImageRecognition a;
-	//a.CreateNeuralNetwork(400, 10, 10, "data/test.dat");
-	//a.RandomizeSamples();
-	//a.Train();
+	ImageRecognition nn;
+	//nn.CreateNeuralNetwork(400, 20, 10, "data/data.dat");
+	//nn.RandomizeSamples();
+	//int64_t sec = nn.Train();
+	//nn.SaveNeuralNetworkState("data/");
+	//std::cout << "Training time: " << sec << std::endl;
 	
-	a.LoadNeuralNetworkFromFile("data/nn.xml");
+	nn.LoadNeuralNetworkState("data/");
 
-	int32_t result = a.CheckExample("examples/test5.png");
-	std::cout << "It is probably number " << result;
+	int32_t result;
 	
+	for (int32_t i = 0; i < 10; i++)
+	{
+		result = nn.CheckExample("examples/test" + std::to_string(i) + ".png");
+		std::cout << "It is probably number " << result << std::endl;
+	}
+
 	getchar();
 	return 0;
 }
