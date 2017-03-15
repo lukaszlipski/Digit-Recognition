@@ -18,18 +18,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageRecognition.cpp">
+    <ClCompile Include="src\DataGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataGenerator.cpp">
+    <ClCompile Include="src\ImageRecognition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImageRecognition.h">
+    <ClInclude Include="src\DataGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataGenerator.h">
+    <ClInclude Include="src\ImageRecognition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -68,7 +68,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -87,10 +92,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opennn_d.lib;tinyxml2_d.lib;FreeImage.lib;libboost_filesystem-vc140-mt-gd-1_63.lib;libboost_system-vc140-mt-gd-1_63.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opennn_d.lib;tinyxml2_d.lib;FreeImage.lib;libboost_filesystem-vc140-mt-gd-1_63.lib;libboost_system-vc140-mt-gd-1_63.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;sfml-graphics-s-d.lib;jpeg.lib;freetype.lib;winmm.lib;gdi32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,22 +120,27 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opennn.lib;tinyxml2.lib;FreeImage.lib;libboost_filesystem-vc140-mt-1_63.lib;libboost_system-vc140-mt-1_63.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opennn.lib;tinyxml2.lib;FreeImage.lib;libboost_filesystem-vc140-mt-1_63.lib;libboost_system-vc140-mt-1_63.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;jpeg.lib;freetype.lib;winmm.lib;gdi32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DataGenerator.cpp" />
-    <ClCompile Include="ImageRecognition.cpp" />
+    <ClCompile Include="src\DataGenerator.cpp" />
+    <ClCompile Include="src\ImageRecognition.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\SimpleWindow.cpp" />
+    <ClCompile Include="src\SimpleUI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DataGenerator.h" />
-    <ClInclude Include="ImageRecognition.h" />
+    <ClInclude Include="src\DataGenerator.h" />
+    <ClInclude Include="src\ImageRecognition.h" />
+    <ClInclude Include="src\SimpleWindow.h" />
+    <ClInclude Include="src\SimpleUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
