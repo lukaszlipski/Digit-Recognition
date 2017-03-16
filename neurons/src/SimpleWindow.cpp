@@ -1,13 +1,13 @@
 #include "SimpleWindow.h"
 
-SimpleWindow & SimpleWindow::Startup()
+SimpleWindow& SimpleWindow::Startup()
 {
-	m_Window.create(sf::VideoMode(1024, 720), "Handwriting Recognition");
+	m_Window.create(sf::VideoMode(1024, 720), "Handwriting Recognition", Style::Close);
 	m_Window.setVerticalSyncEnabled(true);
 	return *this;
 }
 
-SimpleWindow & SimpleWindow::Update()
+SimpleWindow& SimpleWindow::Update()
 {
 	m_Window.display();
 
@@ -23,24 +23,18 @@ SimpleWindow & SimpleWindow::Update()
 	return *this;
 }
 
-SimpleWindow & SimpleWindow::Clear()
+SimpleWindow& SimpleWindow::Clear()
 {
-	m_Window.clear(Color(238,238,238));
+	m_Window.clear(Color(238, 238, 238));
 	return *this;
 }
 
-SimpleWindow & SimpleWindow::Draw(Drawable *sprite)
+SimpleWindow& SimpleWindow::Draw(Drawable* sprite)
 {
 	m_Window.draw(*sprite);
 	return *this;
 }
 
-bool SimpleWindow::ShouldWindowClose()
-{
-	return !m_Window.isOpen();
-}
+bool SimpleWindow::ShouldWindowClose() const { return !m_Window.isOpen(); }
 
-bool SimpleWindow::GetMouseButtonState(Mouse::Button btn)
-{
-	return Mouse::isButtonPressed(btn);
-}
+bool SimpleWindow::GetMouseButtonState(Mouse::Button btn) const { return Mouse::isButtonPressed(btn); }

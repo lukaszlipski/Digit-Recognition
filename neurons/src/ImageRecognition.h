@@ -23,7 +23,6 @@ public:
 	ImageRecognition& SetData(std::string path);
 	ImageRecognition& RandomizeSamples();
 	int64_t Train();
-	int32_t CheckExampleFromFile(std::string path);
-	int32_t CheckExampleFromVector(const std::vector<bool>& vector);
-
+	int32_t CheckExampleFromFile(std::string path) const;
+	int32_t CheckExampleFromVector(const std::vector<bool>& vector) const;
 };

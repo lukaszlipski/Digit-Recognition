@@ -2,7 +2,6 @@
 #include "src/DataGenerator.h"
 #include "src/SimpleWindow.h"
 #include "src/SimpleUI.h"
-#include <cinttypes>
 
 int main()
 {
@@ -28,7 +27,7 @@ int main()
 	float good = 0;
 	int32_t sum = 0;
 	directory_iterator end_itr;
-	for (directory_iterator itr("test/"); itr != end_itr; itr++)
+	for (directory_iterator itr("test/"); itr != end_itr; ++itr)
 	{
 		sum++;
 		path a = itr->path();
@@ -36,8 +35,8 @@ int main()
 		if (result == atof(a.filename().string().c_str()))
 			good++;
 	}
-	std::cout << "Efficiency approximately: " << good/sum << std::endl;
-	
+	std::cout << "Efficiency approximately: " << good / sum << std::endl;
+
 	Font font;
 	font.loadFromFile("fonts/NotoSans-Regular.ttf");
 
@@ -48,24 +47,24 @@ int main()
 	{
 		SimpleWindow::GetInstance().Clear();
 
-		if (ui.Button(0, RECT{ 135, 200, 100, 50 }, Color(41, 182, 246)))
+		// btn reset
+		if (ui.Button(0, RECT{135, 200, 100, 50}, Color(41, 182, 246)))
 		{
 			for (int32_t i = 0; i < BoardState.size(); i++)
 				BoardState[i] = false;
 		}
-
 		ui.Text(1, 155, 210, "Reset", 24, Color(224, 224, 224), &font);
 
-		if (ui.Panel(2, BOARD{ 350,75,25,25,20,20 }, BoardState))
+		// panel
+		if (ui.Panel(2, BOARD{350,75,25,25,20,20}, BoardState))
 		{
 			result = nn.CheckExampleFromVector(BoardState);
 			std::cout << "It is probably number " << result << std::endl;
 		}
-
 		ui.Text(1, 50, 300, "It is probably number " + std::to_string(result), 24, Color(41, 182, 246), &font);
 
 		SimpleWindow::GetInstance().Update();
 	}
-	
+
 	return 0;
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <cinttypes>
 #include "SimpleWindow.h"
 
 struct RECT
@@ -31,8 +30,8 @@ public:
 
 	bool Button(int32_t id, RECT shape, Color color);
 	bool Panel(int32_t id, BOARD shape, std::vector<bool>& state);
-	void Text(int32_t id, float X, float Y, std::string text, int32_t fontSize, Color color, Font *font);
+	void Text(int32_t id, float X, float Y, std::string text, int32_t fontSize, Color color, Font* font) const;
 
 private:
-	bool TestPointInRect(RECT shape) const;
+	static bool TestPointInRect(RECT shape);
 };

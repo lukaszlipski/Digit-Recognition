@@ -1,18 +1,18 @@
 #include "DataGenerator.h"
+#include <FreeImage.h>
+#include <iostream>
 
 DataGenerator::DataGenerator()
-	: m_Width(20), m_Height(20)
-{
-}
+	: m_Width(20), m_Height(20) {}
 
-DataGenerator & DataGenerator::SetExampleSize(size_t width, size_t height)
+DataGenerator& DataGenerator::SetExampleSize(size_t width, size_t height)
 {
 	m_Width = width;
 	m_Height = height;
 	return *this;
 }
 
-bool DataGenerator::GenerateData(const std::string & folderSrcName, const std::string outputFile)
+bool DataGenerator::GenerateData(const std::string& folderSrcName, const std::string outputFile) const
 {
 	if (!exists(folderSrcName) || !is_directory(folderSrcName))
 	{
@@ -26,7 +26,7 @@ bool DataGenerator::GenerateData(const std::string & folderSrcName, const std::s
 	ofstream file(outputFile, ofstream::out | ofstream::app);
 
 	directory_iterator end_itr;
-	for (directory_iterator itr(folderSrcName); itr != end_itr; itr++)
+	for (directory_iterator itr(folderSrcName); itr != end_itr; ++itr)
 	{
 		path a = itr->path();
 		InsertExampleToFile(a.string(), outputFile.c_str(), file);
@@ -36,7 +36,7 @@ bool DataGenerator::GenerateData(const std::string & folderSrcName, const std::s
 	return true;
 }
 
-bool DataGenerator::InsertExampleToFile(const std::string & imageFilePath, const char * destFile, ofstream & file)
+bool DataGenerator::InsertExampleToFile(const std::string& imageFilePath, const char* destFile, ofstream& file) const
 {
 	FIBITMAP* bitmap = FreeImage_Load(FreeImage_GetFileType(imageFilePath.c_str(), 0), imageFilePath.c_str());
 	if (!bitmap) return false;

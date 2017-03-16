@@ -1,13 +1,10 @@
 #include "ImageRecognition.h"
-#include <string>
 #include <FreeImage.h>
 #include <boost/filesystem.hpp>
 
-ImageRecognition::ImageRecognition()
-{
-}
+ImageRecognition::ImageRecognition() : m_OutputSize(0), m_InputSize(0) {}
 
-ImageRecognition & ImageRecognition::CreateNeuralNetwork(int32_t input, int32_t hidden, int32_t output, const std::string& data)
+ImageRecognition& ImageRecognition::CreateNeuralNetwork(int32_t input, int32_t hidden, int32_t output, const std::string& data)
 {
 	m_OutputSize = output;
 	m_InputSize = input;
@@ -16,12 +13,9 @@ ImageRecognition & ImageRecognition::CreateNeuralNetwork(int32_t input, int32_t 
 	m_Data.load_data();
 
 	Variables* variables_pointer = m_Data.get_variables_pointer();
-	for (int32_t i = 0; i < output; i++)
-	{
-		variables_pointer->set_use(input + i, Variables::Target);
-	}
+	for (int32_t i = 0; i < output; i++) { variables_pointer->set_use(input + i, Variables::Target); }
 
-	m_NeuralNetwork.set(input,hidden,output);
+	m_NeuralNetwork.set(input, hidden, output);
 
 	m_NeuralNetwork.construct_scaling_layer();
 	ScalingLayer* scaling_layer_pointer = m_NeuralNetwork.get_scaling_layer_pointer();
@@ -34,7 +28,7 @@ ImageRecognition & ImageRecognition::CreateNeuralNetwork(int32_t input, int32_t 
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::LoadNeuralNetworkState(std::string dir)
+ImageRecognition& ImageRecognition::LoadNeuralNetworkState(std::string dir)
 {
 	m_NeuralNetwork.load(dir + "ns.xml");
 	m_TrainingStrategy.load(dir + "ts.xml");
@@ -42,7 +36,7 @@ ImageRecognition & ImageRecognition::LoadNeuralNetworkState(std::string dir)
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::SaveNeuralNetworkState(std::string dir)
+ImageRecognition& ImageRecognition::SaveNeuralNetworkState(std::string dir)
 {
 	m_NeuralNetwork.save(dir + "ns.xml");
 	m_TrainingStrategy.save(dir + "ts.xml");
@@ -50,14 +44,14 @@ ImageRecognition & ImageRecognition::SaveNeuralNetworkState(std::string dir)
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::SetData(std::string path)
+ImageRecognition& ImageRecognition::SetData(std::string path)
 {
 	m_Data.set_data_file_name(path);
 	m_Data.load_data();
 	return *this;
 }
 
-ImageRecognition & ImageRecognition::RandomizeSamples()
+ImageRecognition& ImageRecognition::RandomizeSamples()
 {
 	Instances* instP = m_Data.get_instances_pointer();
 	instP->split_random_indices();
@@ -74,11 +68,11 @@ int64_t ImageRecognition::Train()
 	m_TrainingStrategy.perform_training();
 	auto end = std::chrono::system_clock().now();
 	int64_t m_TimeSEC = std::chrono::duration_cast<std::chrono::seconds>((end - start)).count();
-	
+
 	return m_TimeSEC;
 }
 
-int32_t ImageRecognition::CheckExampleFromFile(std::string path)
+int32_t ImageRecognition::CheckExampleFromFile(std::string path) const
 {
 	const size_t imgW = static_cast<size_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
 	const size_t imgH = static_cast<size_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
@@ -90,7 +84,7 @@ int32_t ImageRecognition::CheckExampleFromFile(std::string path)
 	bitmap = FreeImage_Rescale(bitmap, imgW, imgH);
 
 	Vector<double> input(m_NeuralNetwork.get_inputs_number());
-	
+
 	for (int32_t y = 0; y < imgH; y++)
 	{
 		for (int32_t x = 0; x < imgW; x++)
@@ -103,13 +97,13 @@ int32_t ImageRecognition::CheckExampleFromFile(std::string path)
 			else
 				value = 0;
 
-			int index = (y*imgH + x);
+			int index = (y * imgH + x);
 			input[index] = value;
 		}
 	}
 	FreeImage_Unload(bitmap);
 
-	Vector< double > out = m_NeuralNetwork.calculate_outputs(input);
+	Vector<double> out = m_NeuralNetwork.calculate_outputs(input);
 
 	uint32_t result = 0;
 	for (int32_t i = 1; i < out.size(); i++)
@@ -118,17 +112,13 @@ int32_t ImageRecognition::CheckExampleFromFile(std::string path)
 			result = i;
 	}
 	return result;
-
 }
 
-int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector)
+int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector) const
 {
 	Vector<double> input(m_NeuralNetwork.get_inputs_number());
-	for (int32_t i = 0; i < input.size(); i++)
-	{
-		input[i] = vector[(i % 20) +  20* (19 - static_cast<int32_t>(i/20))];
-	}
-	Vector< double > out = m_NeuralNetwork.calculate_outputs(input);
+	for (int32_t i = 0; i < input.size(); i++) { input[i] = vector[(i % 20) + 20 * (19 - static_cast<int32_t>(i / 20))]; }
+	Vector<double> out = m_NeuralNetwork.calculate_outputs(input);
 
 	uint32_t result = 0;
 	for (int32_t i = 1; i < out.size(); i++)
