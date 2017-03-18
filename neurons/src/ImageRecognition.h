@@ -22,7 +22,8 @@ public:
 	ImageRecognition& SaveNeuralNetworkState(std::string dir);
 	ImageRecognition& SetData(std::string path);
 	ImageRecognition& RandomizeSamples();
-	int64_t Train();
+	int64_t Train(size_t maxIterations=1000, double maxTimeInSec=1000);
 	int32_t CheckExampleFromFile(std::string path) const;
-	int32_t CheckExampleFromVector(const std::vector<bool>& vector) const;
+	int32_t CheckExampleFromVector(const std::vector<bool>& vector, int32_t val=0) const;
+	int32_t GetOutputNumber() const { return static_cast<int32_t>(m_NeuralNetwork.get_outputs_number()); }
 };

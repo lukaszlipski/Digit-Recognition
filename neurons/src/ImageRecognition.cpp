@@ -58,12 +58,14 @@ ImageRecognition& ImageRecognition::RandomizeSamples()
 	return *this;
 }
 
-int64_t ImageRecognition::Train()
+int64_t ImageRecognition::Train(size_t maxIterations, double maxTimeInSec)
 {
 	m_LossIndex.set_neural_network_pointer(&m_NeuralNetwork);
 	m_LossIndex.set_data_set_pointer(&m_Data);
 	m_TrainingStrategy.set_loss_index_pointer(&m_LossIndex);
-
+	QuasiNewtonMethod *qnm = m_TrainingStrategy.get_quasi_Newton_method_pointer();
+	qnm->set_maximum_iterations_number(maxIterations);
+	qnm->set_maximum_time(maxTimeInSec);
 	auto start = std::chrono::system_clock().now();
 	m_TrainingStrategy.perform_training();
 	auto end = std::chrono::system_clock().now();
@@ -74,8 +76,8 @@ int64_t ImageRecognition::Train()
 
 int32_t ImageRecognition::CheckExampleFromFile(std::string path) const
 {
-	const size_t imgW = static_cast<size_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
-	const size_t imgH = static_cast<size_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
+	const int32_t imgW = static_cast<int32_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
+	const int32_t imgH = static_cast<int32_t>(sqrt(m_NeuralNetwork.get_inputs_number()));
 
 	FIBITMAP* bitmap = FreeImage_Load(FreeImage_GetFileType(path.c_str(), 0), path.c_str());
 	if (!bitmap) return -1;
@@ -97,7 +99,7 @@ int32_t ImageRecognition::CheckExampleFromFile(std::string path) const
 			else
 				value = 0;
 
-			int index = (y * imgH + x);
+			int32_t index = (y * imgH + x);
 			input[index] = value;
 		}
 	}
@@ -114,17 +116,28 @@ int32_t ImageRecognition::CheckExampleFromFile(std::string path) const
 	return result;
 }
 
-int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector) const
+int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector, int32_t val) const
 {
+	if (val >= m_NeuralNetwork.get_outputs_number() || val < 0)
+		val = 0;
+
 	Vector<double> input(m_NeuralNetwork.get_inputs_number());
 	for (int32_t i = 0; i < input.size(); i++) { input[i] = vector[(i % 20) + 20 * (19 - static_cast<int32_t>(i / 20))]; }
 	Vector<double> out = m_NeuralNetwork.calculate_outputs(input);
 
-	uint32_t result = 0;
-	for (int32_t i = 1; i < out.size(); i++)
+	int32_t result;
+
+	for (int32_t i = 0; i <= val; ++i)
 	{
-		if (out[i] > out[result])
-			result = i;
+		int32_t index = 0;
+		for (int32_t j = static_cast<int32_t>(out.size()-1); j > 0; --j)
+		{
+			if (out[j] > out[index])
+				index = j;
+		}
+		out[index] = INT_MIN;
+		result = index;
 	}
+
 	return result;
 }

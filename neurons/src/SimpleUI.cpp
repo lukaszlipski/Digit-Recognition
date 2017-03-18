@@ -32,7 +32,7 @@ bool SimpleUI::Button(int32_t id, RECT shape, Color color)
 bool SimpleUI::Panel(int32_t id, BOARD shape, std::vector<bool>& state)
 {
 	const float SPACE = 3;
-	Sprite sprite(Texture(), IntRect(0, 0, shape.RectWidth, shape.RectHeight));
+	Sprite sprite(Texture(), IntRect(0, 0, static_cast<int32_t>(shape.RectWidth), static_cast<int32_t>(shape.RectHeight)));
 
 	Sprite box(Texture(), IntRect(0, 0, static_cast<int32_t>((shape.RectWidth + SPACE) * shape.SizeX + SPACE), static_cast<int32_t>((shape.RectHeight + SPACE) * shape.SizeY + SPACE)));
 	box.setPosition(Vector2f(shape.X, shape.Y));

@@ -42,7 +42,7 @@ bool DataGenerator::InsertExampleToFile(const std::string& imageFilePath, const 
 	if (!bitmap) return false;
 
 	bitmap = FreeImage_ConvertTo24Bits(bitmap);
-	bitmap = FreeImage_Rescale(bitmap, m_Width, m_Height);
+	bitmap = FreeImage_Rescale(bitmap, static_cast<int32_t>(m_Width), static_cast<int32_t>(m_Height));
 
 	for (int32_t y = 0; y < m_Height; y++)
 	{

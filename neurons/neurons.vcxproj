@@ -127,6 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opennn.lib;tinyxml2.lib;FreeImage.lib;libboost_filesystem-vc140-mt-1_63.lib;libboost_system-vc140-mt-1_63.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;jpeg.lib;freetype.lib;winmm.lib;gdi32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
