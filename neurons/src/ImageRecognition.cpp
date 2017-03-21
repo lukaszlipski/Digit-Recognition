@@ -63,7 +63,7 @@ int64_t ImageRecognition::Train(size_t maxIterations, double maxTimeInSec)
 	m_LossIndex.set_neural_network_pointer(&m_NeuralNetwork);
 	m_LossIndex.set_data_set_pointer(&m_Data);
 	m_TrainingStrategy.set_loss_index_pointer(&m_LossIndex);
-	QuasiNewtonMethod *qnm = m_TrainingStrategy.get_quasi_Newton_method_pointer();
+	QuasiNewtonMethod* qnm = m_TrainingStrategy.get_quasi_Newton_method_pointer();
 	qnm->set_maximum_iterations_number(maxIterations);
 	qnm->set_maximum_time(maxTimeInSec);
 	auto start = std::chrono::system_clock().now();
@@ -125,12 +125,12 @@ int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector
 	for (int32_t i = 0; i < input.size(); i++) { input[i] = vector[(i % 20) + 20 * (19 - static_cast<int32_t>(i / 20))]; }
 	Vector<double> out = m_NeuralNetwork.calculate_outputs(input);
 
-	int32_t result;
+	int32_t result = 0;
 
 	for (int32_t i = 0; i <= val; ++i)
 	{
 		int32_t index = 0;
-		for (int32_t j = static_cast<int32_t>(out.size()-1); j > 0; --j)
+		for (int32_t j = static_cast<int32_t>(out.size() - 1); j > 0; --j)
 		{
 			if (out[j] > out[index])
 				index = j;
@@ -140,4 +140,36 @@ int32_t ImageRecognition::CheckExampleFromVector(const std::vector<bool>& vector
 	}
 
 	return result;
+}
+
+void ImageRecognition::TeachFromUserInput(const std::vector<bool>& vector, int32_t val)
+{
+	Vector<double> input(m_NeuralNetwork.get_inputs_number() + m_NeuralNetwork.get_outputs_number());
+
+	for (int32_t i = 0; i < m_NeuralNetwork.get_inputs_number(); i++) { input[i] = vector[(i % 20) + 20 * (19 - static_cast<int32_t>(i / 20))]; }
+
+	for (int32_t i = 0; i < m_NeuralNetwork.get_outputs_number(); i++)
+	{
+		if (i == val)
+			input[m_NeuralNetwork.get_inputs_number() + i] = 1;
+		else
+			input[m_NeuralNetwork.get_inputs_number() + i] = 0;
+	}
+
+	Matrix<double> dat(1, input.size());
+	dat.set_row(0, input);
+	m_Data.set(dat);
+	Variables* variables_pointer = m_Data.get_variables_pointer();
+	for (int32_t i = 0; i < m_NeuralNetwork.get_outputs_number(); i++) { variables_pointer->set_use(m_NeuralNetwork.get_inputs_number() + i, Variables::Target); }
+
+	m_LossIndex.set_error_type("MEAN_SQUARED_ERROR");
+	m_TrainingStrategy.set_main_type("GRADIENT_DESCENT");
+	m_LossIndex.set_neural_network_pointer(&m_NeuralNetwork);
+	m_LossIndex.set_data_set_pointer(&m_Data);
+	m_TrainingStrategy.set_loss_index_pointer(&m_LossIndex);
+	m_TrainingStrategy.set_display(false);
+	m_TrainingStrategy.perform_training();
+
+	SaveNeuralNetworkState("data/");
+	std::cout << "Finished training" << std::endl;
 }

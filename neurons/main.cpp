@@ -65,7 +65,7 @@ int main()
 		ui.Text(1, 50, 300, "It is probably number " + std::to_string(result), 24, Color(41, 182, 246), &font);
 
 		// btn no
-		if (ui.Button(0, RECT{ 190, 350, 100, 50 }, Color(229, 57, 53)))
+		if (ui.Button(0, RECT{190, 350, 100, 50}, Color(229, 57, 53)))
 		{
 			++index;
 			if (index >= nn.GetOutputNumber())
@@ -75,10 +75,7 @@ int main()
 		ui.Text(1, 225, 360, "No", 24, Color(224, 224, 224), &font);
 
 		// btn yes
-		if (ui.Button(0, RECT{ 80, 350, 100, 50 }, Color(76, 175, 80)))
-		{
-			std::cout << "Not implemented" << std::endl;
-		}
+		if (ui.Button(0, RECT{80, 350, 100, 50}, Color(76, 175, 80))) { nn.TeachFromUserInput(BoardState, result); }
 		ui.Text(1, 110, 360, "Yes", 24, Color(224, 224, 224), &font);
 
 		SimpleWindow::GetInstance().Update();
